@@ -27,18 +27,17 @@ a {
 }
 #options{
     border: 1px solid #e9e9e9;
-    display: inline-block;
     padding: 10px;
     display: none;
 }
-table{
+.menu-table{
     padding: 10px 0;
     text-align: left;
 }
-.tb-head{
+.menu-table .tb-head{
     background: #e9e9e9;
 }
-td{
+.menu-table td{
     padding: 5px 10px;
 }
 #start-game {
@@ -46,4 +45,15 @@ td{
     background: #4c8efa;
     color: #fff;
     font-size: 13px;
+}
+.values {
+    background: #e9e9e9;
+}
+.values > img {
+    vertical-align: middle;
+    padding: 0px 40px;
+}
+.values > span {
+    padding: 15px 25px;
+    background: #fff;
 }
