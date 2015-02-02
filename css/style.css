@@ -31,7 +31,7 @@ a {
     display: none;
 }
 .menu-table{
-    padding: 10px 0;
+    margin: 7px 0;
     text-align: left;
 }
 .menu-table .tb-head{
@@ -47,13 +47,16 @@ a {
     font-size: 13px;
 }
 .values {
+    margin-top: 10px;
     background: #e9e9e9;
 }
 .values > img {
     vertical-align: middle;
     padding: 0px 40px;
+    width: 50px;
+    height: 50px;
 }
 .values > span {
-    padding: 15px 25px;
+    padding: 12px 25px;
     background: #fff;
 }
