@@ -13,7 +13,7 @@
 				<h2>Minesweeper</h2>
 				<a href="#" id="game-options">Game options &#x25BE;</a>
       </div>
-      <div id="options">
+      <div class="options" id="js-options">
 				<span> Choose Difficulty Level </span>
 				<form action="">
 					<table class="menu-table">
@@ -42,17 +42,17 @@
 					    <td>99</td>
 					  </tr>
 					</table>
-					<a href="#" id="start-game">Start Game</a>
+					<a href="#" class="start-game" id="js-start-game">Start Game</a>
 				</form>
       </div>
       <div class="game">
       	<div class="values">
-      		<span id ="no-of-mines">10</span>
+      		<span class="no-of-mines" id="js-no-of-mines"></span>
       		<img src="images/smile.png" alt="Smile">
-      		<span id = "clock">999</span>
+      		<span id = "clock">0</span>
       	</div>
       	<div class="board">
-      		<table id = "game-board">
+      		<table class="game-board" id="js-game-board">
 
       		</table>
       	</div>

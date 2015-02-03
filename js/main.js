@@ -1,30 +1,35 @@
 // learning to implement Revealing Module Pattern
 
 (function() {
-	var minesweeper = (function(){
-		var minesweep = {};
+	var MS = (function(){
+		var config = {
+			rows: 9,
+			cols: 9,
+			mines: 10
+		};
 
-		function useGameInitials(){
-			return minesweep;
+		function getGameConfig(){
+			return config;
 		}
 
-		function setGameInitials(rows, cols, mines){
-			minesweep.rows = rows;
-			minesweep.cols =  cols;
-			minesweep.mines = mines;
+		function setGameConfig(rows, cols, mines){
+			config.rows = rows;
+			config.cols =  cols;
+			config.mines = mines;
 		}
 
 		return {
-			setMs: setGameInitials,
-			ms: useGameInitials
+			setConfig: setGameConfig,
+			getConfig: getGameConfig
 		};
 
 	})();
 
-	var beforeGame = (function(){
+	var initialize = (function(){
+
 		function toggleOptions(){
 			document.getElementById('game-options').addEventListener('click', function(){
-				var menu = document.getElementById('options');
+				var menu = document.getElementById('js-options');
 				menu.style.display = menu.style.display === "inline-block" ? "none" : "inline-block";
 			});
 		}
@@ -34,31 +39,58 @@
 			var intermediate = document.getElementById('intermediate');
 			var expert = document.getElementById('expert');
 			if(beginner.checked){
-				minesweeper.setMs(9,9,10);
+				MS.setConfig(9,9,10);
 			}
 			else if(intermediate.checked){
-				minesweeper.setMs(16,16,40);
+				MS.setConfig(16,16,40);
 			}
 			else if(expert.checked){
-				minesweeper.setMs(16,30,99);
+				MS.setConfig(16,30,99);
 			}
-			console.log(minesweeper.ms());
+			console.log(MS.getConfig());
+			generateBoard();
 		}
 
-		function newGame(){
-			var startGame = document.getElementById('start-game');
+		function newGameInit(){
+			var startGame = document.getElementById('js-start-game');
 			startGame.addEventListener('click', function(){
 				selectDifficulty();
+				var menu = document.getElementById('js-options');
+				menu.style.display = menu.style.display === "inline-block" ? "none" : "inline-block";
 			});
 		}
 
-		return {
-				toggleMenu: toggleOptions,
-				startGame: newGame
+		function generateBoard(){
+			var board = document.getElementById('js-game-board');
+			var noOfMines = document.getElementById('js-no-of-mines');
+
+			var rows = MS.getConfig().rows;
+			var cols = MS.getConfig().cols;
+			var mines = MS.getConfig().mines;
+			var html = "", td, id=1;
+
+			for(var i=0; i<rows; i++){
+				html += '<tr>';
+				for(var j=0; j<cols; j++){
+					td = '<td class="tile" id="{id}"></td>';
+					html += td.replace("{id}", id);
+					id++;
+				}
+				html += "</tr>";
+			}
+			board.innerHTML = html;
+			noOfMines.innerHTML = mines;
+		}
+
+		return function(){
+			toggleOptions();
+			newGameInit();
+			generateBoard();
+
 		};
+
 	})();
 
-	beforeGame.toggleMenu();
-	beforeGame.startGame();
+	initialize();
 
 }());
