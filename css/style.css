@@ -10,7 +10,7 @@ a {
     text-decoration: none;
 }
 .game-container{
-    width: 50%;
+    width: 55%;
     margin: 50px auto;
     background: #fff;
     padding: 15px;
@@ -39,7 +39,7 @@ a {
 .menu-table td{
     padding: 5px 10px;
 }
-.start-game {
+.new-game {
     padding: 7px 15px;
     background: #4c8efa;
     color: #fff;
@@ -47,24 +47,30 @@ a {
 }
 .values {
     margin-top: 10px;
-    background: #e9e9e9;
+    background: #f2f3f4;
+    border: 1px solid #e9e9e9;
 }
 .values > img {
     vertical-align: middle;
     padding: 0px 40px;
     width: 50px;
     height: 50px;
+    cursor: pointer;
 }
 .values > span {
     padding: 12px 25px;
     background: #fff;
+    border: 1px solid #e9e9e9;
 }
 .board {
-    margin-top: 15px;
+    margin-top: 10px;
     display: inline-block;
 }
 .game-board {
     border-spacing: 0;
+    padding: 10px;
+    border: 1px solid #e9e9e9;
+    background: #f2f3f4;
 }
 .tile {
     background: #98a1ac;

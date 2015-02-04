@@ -28,9 +28,13 @@
 	var initialize = (function(){
 
 		function toggleOptions(){
+			var menu = document.getElementById('js-options');
+			menu.style.display = menu.style.display === "inline-block" ? "none" : "inline-block";
+		}
+
+		function handleToggleEvent(){
 			document.getElementById('game-options').addEventListener('click', function(){
-				var menu = document.getElementById('js-options');
-				menu.style.display = menu.style.display === "inline-block" ? "none" : "inline-block";
+				toggleOptions();
 			});
 		}
 
@@ -52,11 +56,10 @@
 		}
 
 		function newGameInit(){
-			var startGame = document.getElementById('js-start-game');
-			startGame.addEventListener('click', function(){
+			var newGame = document.getElementById('js-new-game');
+			newGame.addEventListener('click', function(){
 				selectDifficulty();
-				var menu = document.getElementById('js-options');
-				menu.style.display = menu.style.display === "inline-block" ? "none" : "inline-block";
+				toggleOptions();
 			});
 		}
 
@@ -83,7 +86,7 @@
 		}
 
 		return function(){
-			toggleOptions();
+			handleToggleEvent();
 			newGameInit();
 			generateBoard();
 
@@ -92,5 +95,42 @@
 	})();
 
 	initialize();
+
+	var startGame = (function(){
+		var emoticons = document.getElementById('js-play-mood');
+		var clock = document.getElementById('js-clock');
+		var board = document.getElementById("js-game-board");
+
+		function timer(){
+			var counter = 0;
+			var time = setInterval(function(){
+				if(counter < 999){
+					counter++;
+					clock.innerHTML = counter;
+				}
+				else {
+					clearInterval(time);
+					emoticons.setAttribute("src", "images/sad.png");
+				}
+			}, 1000);
+		}
+
+		function handleClickedTd(){
+			board.addEventListener("click", function(e) {
+				if(e.target && e.target.nodeName === "TD") {
+					tdID = parseInt(e.target.id, 10);
+					emoticons.setAttribute("src", "images/surprise.png");
+				}
+			});
+		}
+
+		return {
+			timer: timer,
+			findClickedTd: handleClickedTd
+		};
+
+	})();
+
+	startGame.findClickedTd();
 
 }());
