@@ -1,5 +1,3 @@
-// learning to implement Revealing Module Pattern
-
 (function() {
 	var MS = (function(){
 		var config = {
@@ -89,7 +87,6 @@
 			handleToggleEvent();
 			newGameInit();
 			generateBoard();
-
 		};
 
 	})();
@@ -100,10 +97,79 @@
 		var emoticons = document.getElementById('js-play-mood');
 		var clock = document.getElementById('js-clock');
 		var board = document.getElementById("js-game-board");
+		var mines = MS.getConfig().mines;
+		var rows = MS.getConfig().rows;
+		var cols = MS.getConfig().cols;
+		var randomNos = [];
+		var tilesWithMines = [];
+		var firstTile = true;
+		var time;
+
+		function generateUniqueRandomNos(){
+			for(var i=1; i<= mines; i++){
+				var random = Math.floor((Math.random()* (rows*cols))+1);
+				randomNos.push(random);
+			}
+			var uniqueNos = randomNos.filter(function(no, index){
+				return randomNos.indexOf(no) === index;
+			});
+			return uniqueNos;
+		}
+
+		function handleClickedTd(){
+			board.addEventListener("click", function(e) {
+				if(e.target && e.target.nodeName === "TD") {
+					tileID = parseInt(e.target.id, 10);
+					tile = document.getElementById(e.target.id);
+					if(firstTile === true){
+						play(tileID);
+						tile.classList.add('opened-tile');
+						firstTile = false;
+					}
+					else if(clickedMine(tileID)){
+						lost();
+					}
+					else {
+						tile.classList.add('opened-tile');
+					}
+				}
+			});
+		}
+
+		function play(tileID){
+			timer();
+			placeMines(tileID);
+		}
+
+		function placeMines(tileID){
+			var uniqRnos = generateUniqueRandomNos();
+			for(var i=0; i< uniqRnos.length; i++){
+				if(uniqRnos[i] !== tileID){
+					tilesWithMines.push(uniqRnos[i]);
+				}
+			}
+			console.log(tilesWithMines);
+		}
+
+		function clickedMine(tileID){
+			for(var k=0; k< tilesWithMines.length; k++){
+				if(tileID === tilesWithMines[k]){
+					return true;
+				}
+			}
+		}
+
+		function lost(){
+			clearInterval(time);
+			for(var i =0; i< tilesWithMines.length; i++){
+				tileWithMine = document.getElementById(tilesWithMines[i]);
+				tileWithMine.classList.add('mines');
+			}
+		}
 
 		function timer(){
 			var counter = 0;
-			var time = setInterval(function(){
+			time = setInterval(function(){
 				if(counter < 999){
 					counter++;
 					clock.innerHTML = counter;
@@ -115,22 +181,10 @@
 			}, 1000);
 		}
 
-		function handleClickedTd(){
-			board.addEventListener("click", function(e) {
-				if(e.target && e.target.nodeName === "TD") {
-					tdID = parseInt(e.target.id, 10);
-					emoticons.setAttribute("src", "images/surprise.png");
-				}
-			});
-		}
-
 		return {
-			timer: timer,
 			findClickedTd: handleClickedTd
 		};
 
 	})();
-
 	startGame.findClickedTd();
-
 }());

@@ -11,7 +11,7 @@ a {
 }
 .game-container{
     width: 55%;
-    margin: 50px auto;
+    margin: 70px auto;
     background: #fff;
     padding: 15px;
     border: 1px solid #e9e9e9;
@@ -81,4 +81,27 @@ a {
     width: 20px;
     height: 20px;
     cursor: pointer;
+}
+.opened-tile{
+    background: #c0c7cd;
+    border: 2px solid #616d7b;
+}
+.mines {
+    background: red url('../images/mine.png') center center;
+    border: none;
+
+}
+.footer{
+    background: #fff;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    border-top: 1px solid #d9d9d9;
+}
+.foot {
+    width: 55%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 10px 30px;
 }
