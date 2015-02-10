@@ -6,64 +6,63 @@
   <title>Minesweeper in pure Js</title>
   <link rel="stylesheet" href="css/style.css">
   <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-
 </head>
 <body>
   <div class="site">
     <div class="game-container">
       <div class="header">
-				<h2>Minesweeper</h2>
-				<a href="#" id="game-options">Game options &#x25BE;</a>
+	<h2>Minesweeper</h2>
+	<a href="#" id="game-options">Game options &#x25BE;</a>
       </div>
       <div class="options" id="js-options">
-				<span> Choose Difficulty Level </span>
-				<form action="">
-					<table class="menu-table">
-					  <tr class="tb-head">
-					    <td>Level</td>
-					    <td>Columns</td>
-					    <td>Rows</td>
-					    <td>Mines</td>
-					  </tr>
-					  <tr>
-					    <td><label><input type="radio" name="level" id="beginner" checked="checked">&nbsp; Beginner</label></td>
-					    <td>9</td>
-					    <td>9</td>
-					    <td>10</td>
-					  </tr>
-					  <tr>
-					    <td><label><input type="radio" name ="level" id="intermediate">&nbsp; Intermediate</label></td>
-					    <td>16</td>
-					    <td>16</td>
-					    <td>40</td>
-					  </tr>
-					  <tr>
-					    <td><label><input type="radio" name ="level" id="expert">&nbsp; Expert</label></td>
-					    <td>16</td>
-					    <td>30</td>
-					    <td>99</td>
-					  </tr>
-					</table>
-					<a href="#" class="new-game" id="js-new-game">New Game</a>
-				</form>
+	<span> Choose Difficulty Level </span>
+	<form action="">
+	  <table class="menu-table">
+	    <tr class="tb-head">
+	      <td>Level</td>
+	      <td>Columns</td>
+	      <td>Rows</td>
+	      <td>Mines</td>
+	    </tr>
+	    <tr>
+	      <td><label><input type="radio" name="level" id="beginner" checked="checked">&nbsp; Beginner</label></td>
+	      <td>9</td>
+	      <td>9</td>
+	      <td>10</td>
+	    </tr>
+	    <tr>
+	      <td><label><input type="radio" name ="level" id="intermediate">&nbsp; Intermediate</label></td>
+	      <td>16</td>
+	      <td>16</td>
+	      <td>40</td>
+	    </tr>
+	    <tr>
+	      <td><label><input type="radio" name ="level" id="expert">&nbsp; Expert</label></td>
+	      <td>16</td>
+	      <td>30</td>
+	      <td>99</td>
+	    </tr>
+	  </table>
+	  <a href="#" class="new-game" id="js-new-game">New Game</a>
+	</form>
       </div>
       <div class="game">
       	<div class="values">
-      		<span class="no-of-mines" id="js-no-of-mines"></span>
-      		<img src="images/smile.png" alt="Emoticons" id="js-play-mood">
-      		<span id="js-clock">0</span>
+      	  <span class="no-of-mines" id="js-no-of-mines"></span>
+      	  <img src="images/smile.png" alt="Emoticons" id="js-play-mood">
+      	  <span id="js-clock">0</span>
       	</div>
       	<div class="board">
-      		<table class="game-board" id="js-game-board">
+      	  <table class="game-board" id="js-game-board">
 
-      		</table>
+      	  </table>
       	</div>
       </div>
     </div>
     <div class="footer">
-    	<div class="foot">
-				<a href="https://github.com/akash-bhardwaj/Minesweeper" target="_blank"><i class="fa fa-github-alt fa-lg"></i></a>
-    	</div>
+      <div class="foot">
+	<a href="https://github.com/akash-bhardwaj/Minesweeper" target="_blank"><i class="fa fa-github-alt fa-lg"></i></a>
+      </div>
     </div>
   </div>
 
