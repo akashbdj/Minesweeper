@@ -8,6 +8,7 @@
         rows: 9,
         cols: 9,
         mines: 10,
+        tilesWithMines: [],
 
         setConfig: function(rows,cols, mines){
           this.rows = rows;
@@ -65,6 +66,18 @@
       },
 
       setSmiley: function(mood){
+        if(mood === 'sad'){
+          model.elements.smiley.setAttribute("src", "images/sad.png");
+        }
+        else if(mood === 'smile'){
+          model.elements.smiley.setAttribute("src", "images/smile.png");
+        }
+        else if(mood === 'cool'){
+          model.elements.smiley.setAttribute("src", "images/cool.png");
+        }
+      },
+
+      setClassOfTile: function(){
 
       }
 
@@ -97,7 +110,7 @@
         var newGame = document.getElementById('js-new-game');
         newGame.addEventListener('click', function(){
           controller.selectDifficulty(); // On newGame - Select difficulty level and generate the game board.
-          views.generateBoard(); // generates boards with the chosen difficulty.
+          views.generateBoard(); // generates board with the chosen difficulty.
           views.menuToggle(); // hide Menu after the new Game has been initialized.
         });
       },
@@ -117,16 +130,53 @@
       },
 
       playGame: function(tileId){
+        controller.timer();
+        controller.plantMines(tileId);
+      },
 
+      timer: function(){
+        var counter = 0;
+        time = setInterval(function(){
+          if(counter < 999){
+            counter++;
+            model.elements.clock.innerHTML = counter;
+          }
+          else {
+            clearInterval(time);
+            views.setSmiley("sad");
+          }
+        }, 1000);
+      },
+
+      plantMines: function(tileId){
+        var possibleMinePositions = [];
+        var size = model.config.rows * model.config.cols;
+        for(var i = 0; i < size; i++){
+          if(tileId !== i){
+            possibleMinePositions.push(i);
+          }
+        }
+        model.config.tilesWithMines = controller.getMinePositions(possibleMinePositions).slice(0, model.config.mines);
+        console.log("mines planted at these places: " + model.config.tilesWithMines);
+      },
+
+      getMinePositions: function(positions){
+        var temp, i, random;
+        for(i = positions.length; i > 0; i--){
+          random = Math.floor(Math.random() * i);
+          temp = positions[i];
+          positions[i] = positions[random];
+          positions[random] = temp;
+        }
+        return positions;
       }
-
     };
 
     return {
       init: function(){
         views.generateBoard(); // generates board with default config (9,9,10)
         controller.handleMenuToggle(); // handles hide/show mechanism of Menu
-        controller.newGameInit(); // generates boards if the player happens to choose difficulty and start a new game.
+        controller.newGameInit(); // generates board if the player happens to choose difficulty and start a new game.
         controller.handleMouseEvents();
       }
     };
