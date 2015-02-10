@@ -18,10 +18,6 @@
       },
 
       tile: {
-        isOpened: false,
-        isMine: false,
-        isEmpty: false,
-        isFlagged: false,
         isFirstTile: true
       },
 
@@ -125,6 +121,14 @@
               controller.playGame(tileId);
               model.tile.isFirstTile = false;
             }
+            else if(controller.hasClickedMine(tileId)){
+              views.setSmiley('sad');
+              clearInterval(time);
+              for(var i = 0; i < model.config.tilesWithMines.length; i++){
+                var showMine = document.getElementById(model.config.tilesWithMines[i]);
+                showMine.classList.add('mines');
+              }
+            }
           }
         });
       },
@@ -151,24 +155,33 @@
       plantMines: function(tileId){
         var possibleMinePositions = [];
         var size = model.config.rows * model.config.cols;
-        for(var i = 0; i < size; i++){
+        for(var i = 1; i <= size; i++){
           if(tileId !== i){
             possibleMinePositions.push(i);
           }
         }
         model.config.tilesWithMines = controller.getMinePositions(possibleMinePositions).slice(0, model.config.mines);
-        console.log("mines planted at these places: " + model.config.tilesWithMines);
+        console.log("these are the places where mines are placed : " + model.config.tilesWithMines);
       },
 
       getMinePositions: function(positions){
         var temp, i, random;
-        for(i = positions.length; i > 0; i--){
-          random = Math.floor(Math.random() * i);
+        for(i = positions.length - 1; i > 0; i--){
+          random = Math.floor(Math.random() * i+1);
           temp = positions[i];
           positions[i] = positions[random];
           positions[random] = temp;
         }
         return positions;
+      },
+
+      hasClickedMine: function(tileId){
+        var minesPositions = model.config.tilesWithMines;
+        for(var k = 0; k < minesPositions.length; k++){
+          if(tileId === minesPositions[k]){
+            return true;
+          }
+        }
       }
     };
 
