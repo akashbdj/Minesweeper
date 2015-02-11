@@ -131,33 +131,33 @@
             var tileId = parseInt(e.target.id, 10);
             var tile = document.getElementById(tileId);
 
-            if(model.tile.isFirstTile === true){
-              controller.playGame(tileId);
-              model.tile.isFirstTile = false;
-            }
-            else if(controller.hasClickedMine(tileId)){
-              views.setSmiley('sad');
-              clearInterval(time);
-              for(var i = 0; i < model.config.tilesWithMines.length; i++){
-                var showMine = document.getElementById(model.config.tilesWithMines[i]);
-                showMine.classList.add('mines');
-              }
-            }
-            else if(hasWon()){
-
-            }
-            // if right click, do flagging!
-            else if(e.button === 2){
-              console.log("Hello Right Click!");
+            if(e.button === 2){
+              console.log("Hello, Right Click!");
               views.doFlagging(tile);
+            }
+            else{
+              controller.playGame(tileId);
             }
           }
         });
       },
 
       playGame: function(tileId){
-        controller.timer();
-        controller.plantMines(tileId);
+        if(model.tile.isFirstTile === true){
+          controller.timer();
+          controller.plantMines(tileId);
+          model.tile.isFirstTile = false;
+        }
+        else if(controller.hasClickedMine(tileId)){
+          views.setSmiley('sad');
+          clearInterval(time);
+          for(var i = 0; i < model.config.tilesWithMines.length; i++){
+            var showMine = document.getElementById(model.config.tilesWithMines[i]);
+            if(!showMine.classList.contains("flagged")){
+              showMine.classList.add('mines');
+            }
+          }
+        }
       },
 
       timer: function(){
