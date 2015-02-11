@@ -91,6 +91,10 @@ a {
     border: none;
 
 }
+.flagged {
+    background: url('../images/flag.png');
+    background-size: 20px 20px;
+}
 .footer{
     background: #fff;
     position: fixed;

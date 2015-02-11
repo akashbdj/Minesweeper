@@ -73,8 +73,22 @@
         }
       },
 
-      setClassOfTile: function(){
+      doFlagging: function(element){
+        var minesElement = model.elements.noOfMines;
+        var mineValue = parseInt(minesElement.innerHTML,10);
 
+        if(element.classList.contains("flagged")){
+          element.classList.remove("flagged");
+          if(mineValue < model.config.mines){
+            mineValue++;
+            minesElement.innerHTML = mineValue;
+          }
+        }
+        else if(mineValue > 0){
+          element.classList.add("flagged");
+          mineValue--;
+          minesElement.innerHTML = mineValue;
+        }
       }
 
     };
@@ -112,7 +126,7 @@
       },
 
       handleMouseEvents: function(){
-        model.elements.board.addEventListener('click', function(e){
+        model.elements.board.addEventListener('mouseup', function(e){
           if(e.target && e.target.nodeName === 'TD'){
             var tileId = parseInt(e.target.id, 10);
             var tile = document.getElementById(tileId);
@@ -128,6 +142,14 @@
                 var showMine = document.getElementById(model.config.tilesWithMines[i]);
                 showMine.classList.add('mines');
               }
+            }
+            else if(hasWon()){
+
+            }
+            // if right click, do flagging!
+            else if(e.button === 2){
+              console.log("Hello Right Click!");
+              views.doFlagging(tile);
             }
           }
         });
@@ -148,6 +170,8 @@
           else {
             clearInterval(time);
             views.setSmiley("sad");
+            model.status.isTimeOut = true;
+            model.status.isGameOver = true;
           }
         }, 1000);
       },
@@ -167,7 +191,7 @@
       getMinePositions: function(positions){
         var temp, i, random;
         for(i = positions.length - 1; i > 0; i--){
-          random = Math.floor(Math.random() * i+1);
+          random = Math.floor(Math.random() * (i+1));
           temp = positions[i];
           positions[i] = positions[random];
           positions[random] = temp;
