@@ -1,100 +1,53 @@
 (function(){
-
   var Game = (function(){
 
+    // holds the data of the application.
     var model = {
-
       config: {
         rows: 9,
         cols: 9,
         mines: 10,
-        tilesWithMines: [],
-
-        setConfig: function(rows,cols, mines){
+        tiles: [],
+        setConfig: function(rows, cols, mines){
           this.rows = rows;
           this.cols = cols;
           this.mines = mines;
         }
       },
-
       tile: {
-        isFirstTile: true
-      },
-
-      status: {
-        isGameOver: false,
-        isTimeOut: false
-      },
-
-      elements: {
-        clock: document.getElementById('js-clock'),
-        smiley: document.getElementById('js-play-mood'),
-        menu: document.getElementById('js-options'),
-        board: document.getElementById('js-game-board'),
-        noOfMines: document.getElementById('js-no-of-mines'),
-        gameOptions: document.getElementById('game-options')
+        isFlagged: false,
+        isVisited: false,
+        hasMine: false
       }
     };
 
+    // for ease of reference!
+    var components = {
+      isGameOver: false,
+      isTimeOut: false,
+      clock: document.getElementById('js-clock'),
+      smiley: document.getElementById('js-play-mood'),
+      menu: document.getElementById('js-options'),
+      board: document.getElementById('js-game-board'),
+      noOfMines: document.getElementById('js-no-of-mines'),
+      gameOptions: document.getElementById('game-options'),
+      images: {
+        sad: "images/sad.png",
+        smile: "images/smile.png",
+        cool: "images/cool.png",
+        flag: "images/flag.png",
+        mine: "images/mine.png"
+      }
+    };
+
+    // User Interfaces
     var views = {
 
-      menuToggle: function(){
-        model.elements.menu.style.display = model.elements.menu.style.display === "inline-block" ? "none" : "inline-block";
-      },
-
-      generateBoard: function(){
-        var rows = model.config.rows;
-        var cols = model.config.cols;
-        var mines = model.config.mines;
-        var html= "",td, id =1;
-
-        for(var i=0; i<rows; i++){
-          html += '<tr>';
-          for(var j=0; j<cols; j++){
-            td = '<td class="tile" id="{id}"></td>';
-            html += td.replace("{id}", id);
-            id++;
-          }
-          html += '</tr>';
-        }
-        model.elements.board.innerHTML = html;
-        model.elements.noOfMines.innerHTML = mines;
-      },
-
-      setSmiley: function(mood){
-        if(mood === 'sad'){
-          model.elements.smiley.setAttribute("src", "images/sad.png");
-        }
-        else if(mood === 'smile'){
-          model.elements.smiley.setAttribute("src", "images/smile.png");
-        }
-        else if(mood === 'cool'){
-          model.elements.smiley.setAttribute("src", "images/cool.png");
-        }
-      },
-
-      doFlagging: function(element){
-        var minesElement = model.elements.noOfMines;
-        var mineValue = parseInt(minesElement.innerHTML,10);
-
-        if(element.classList.contains("flagged")){
-          element.classList.remove("flagged");
-          if(mineValue < model.config.mines){
-            mineValue++;
-            minesElement.innerHTML = mineValue;
-          }
-        }
-        else if(mineValue > 0){
-          element.classList.add("flagged");
-          mineValue--;
-          minesElement.innerHTML = mineValue;
-        }
-      }
-
     };
 
+    // handles all the interactions/events - updates the model/views accordingly.
     var controller = {
-
+      //  handles hide/show Menu EVENT!
       handleMenuToggle: function(){
         model.elements.gameOptions.addEventListener('click', function(){
           views.menuToggle();
@@ -125,101 +78,22 @@
         });
       },
 
-      handleMouseEvents: function(){
-        model.elements.board.addEventListener('mouseup', function(e){
-          if(e.target && e.target.nodeName === 'TD'){
-            var tileId = parseInt(e.target.id, 10);
-            var tile = document.getElementById(tileId);
-
-            if(e.button === 2){
-              console.log("Hello, Right Click!");
-              views.doFlagging(tile);
-            }
-            else{
-              controller.playGame(tileId);
-            }
-          }
-        });
-      },
-
-      playGame: function(tileId){
-        if(model.tile.isFirstTile === true){
-          controller.timer();
-          controller.plantMines(tileId);
-          model.tile.isFirstTile = false;
-        }
-        else if(controller.hasClickedMine(tileId)){
-          views.setSmiley('sad');
-          clearInterval(time);
-          for(var i = 0; i < model.config.tilesWithMines.length; i++){
-            var showMine = document.getElementById(model.config.tilesWithMines[i]);
-            if(!showMine.classList.contains("flagged")){
-              showMine.classList.add('mines');
-            }
-          }
+      // adds MODEL.TILE's properties(isOpened, hasMine, etc) to individual tile.
+      tileProp: function(){
+        var tds = document.getElementsByTagName('td');
+        for(var i = 0; i < tds.length; i++){
+          var eachTile = Object.create(model.tile);
+          eachTile.td = tds[i]; // associates tile with properties!
+          tiles.push(eachTile); // Tiles array contains all the tiles with properties.
         }
       },
 
-      timer: function(){
-        var counter = 0;
-        time = setInterval(function(){
-          if(counter < 999){
-            counter++;
-            model.elements.clock.innerHTML = counter;
-          }
-          else {
-            clearInterval(time);
-            views.setSmiley("sad");
-            model.status.isTimeOut = true;
-            model.status.isGameOver = true;
-          }
-        }, 1000);
-      },
-
-      plantMines: function(tileId){
-        var possibleMinePositions = [];
-        var size = model.config.rows * model.config.cols;
-        for(var i = 1; i <= size; i++){
-          if(tileId !== i){
-            possibleMinePositions.push(i);
-          }
-        }
-        model.config.tilesWithMines = controller.getMinePositions(possibleMinePositions).slice(0, model.config.mines);
-        console.log("these are the places where mines are placed : " + model.config.tilesWithMines);
-      },
-
-      getMinePositions: function(positions){
-        var temp, i, random;
-        for(i = positions.length - 1; i > 0; i--){
-          random = Math.floor(Math.random() * (i+1));
-          temp = positions[i];
-          positions[i] = positions[random];
-          positions[random] = temp;
-        }
-        return positions;
-      },
-
-      hasClickedMine: function(tileId){
-        var minesPositions = model.config.tilesWithMines;
-        for(var k = 0; k < minesPositions.length; k++){
-          if(tileId === minesPositions[k]){
-            return true;
-          }
-        }
-      }
     };
 
-    return {
+    return{
       init: function(){
-        views.generateBoard(); // generates board with default config (9,9,10)
-        controller.handleMenuToggle(); // handles hide/show mechanism of Menu
-        controller.newGameInit(); // generates board if the player happens to choose difficulty and start a new game.
-        controller.handleMouseEvents();
+        controller.tileProp();
       }
     };
-
   })();
-
-  Game.init();
-
 }());
