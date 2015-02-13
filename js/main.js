@@ -1,12 +1,12 @@
 /*
- --------------------------------------------------------------------
-          MINESWEEPER IN PURE JAVASCRIPT : Akash Bhardwaj :)
- --------------------------------------------------------------------
+                     --------------------------------------------------------------------
+                                      MINESWEEPER IN PURE JAVASCRIPT
+                     --------------------------------------------------------------------
 */
-//  -------------------- LOGIC STARTS HERE --------------------
 
 (function(){
   var Game = (function(){
+
     // holds the data of the application.
     var model = {
       config: {
@@ -42,13 +42,12 @@
         sad: "images/sad.png",
         smile: "images/smile.png",
         cool: "images/cool.png",
-        flag: "images/flag.png",
-        mine: "images/mine.png"
       }
     };
 
     // User Interface
     var views = {
+
       // handles the actual logic of Game Menu hide/show mechanism
       menuToggle: function(){
         components.menu.style.display = components.menu.style.display === "inline-block" ? "none" : "inline-block";
@@ -73,12 +72,23 @@
         components.noOfMines.innerHTML = mines;
       },
 
+      setSmiley: function(mood){
+        if(mood === 'sad'){
+          model.elements.smiley.setAttribute("src", components.images.sad);
+        }
+        else if(mood === 'smile'){
+          model.elements.smiley.setAttribute("src", components.images.smile);
+        }
+        else if(mood === 'cool'){
+          model.elements.smiley.setAttribute("src", components.images.cool);
+        }
+      },
 
     };
 
     // handles all the interactions/events - updates the model/views accordingly.
     var controller = {
-      //  handles hide/show Menu EVENT!
+
       handleMenuToggle: function(){
         components.gameOptions.addEventListener('click', function(){
           views.menuToggle();
@@ -112,27 +122,30 @@
 
       // adds MODEL.TILE's properties(isOpened, hasMine, etc) to individual tile.
       tileProp: function(){
-        model.config.tiles.length = 0; // ensures that tiles are pushed to an empty array on every refill.
+        // ensures that tiles are pushed to an empty array on every refill.
+        model.config.tiles.length = 0;
         var tds = document.getElementsByClassName('tile');
+
         for(var i = 0; i < tds.length; i++){
-          var eachTile = Object.create(model.tile); // model.tile is now a prototype of eachTile. Crockford \m/
+          var eachTile = Object.create(model.tile); // model.tile is now a prototype of eachTile. Crockford \m/s
           eachTile.td = tds[i]; // associates tile with properties!
-          model.config.tiles.push(eachTile); // Tiles array contains all the tiles with properties.
+          model.config.tiles.push(eachTile);
           console.log(model.config.tiles[i]);
         }
       },
 
-      // handles all the interaction with the tiles
       handleMouseEvents: function(){
         // disables Right Click (Context Menu) on the board; so that It should do the Flagging on right click.
         components.board.addEventListener('contextmenu', function(e){
           e.prevantDefault();
         });
+
         // finds target element through Event Delegation, i.e finds the clicked tile.
         component.board.addEventListener('mouseup', function(e){
           if(e.target && e.target.nodeName === 'TD'){
             var tileId = parseInt(e.target.id, 10);
             var tile = document.getElement(tileId);
+
             // if it's right Click --- DO THE FLAGGING!
             if(e.button === 2){
               console.log("Hello, Right Click");
@@ -154,8 +167,16 @@
           controller.plantMines(tileId);
           components.isFirstTile = false;
         }
-        else if(controller.hasClickedMine()){
+        else if(controller.hasClickedMine(tileId)){
+          views.setSmiley("sad");
+          clearInterval(time);
 
+          //Show all the mines which are not flagged!
+          for(var i = 0; i < model.config.tiles.length; i++){
+            if(model.config.tiles[i].hasMine === true & model.config.tiles[i].isFlagged === false){
+              model.config.tiles[i].classList.add("mines");
+            }
+          }
         }
       },
 
@@ -174,16 +195,17 @@
           }
         }, 1000);
       },
-      // donot plant a mine at the position of the first Click!
+
+      // Do not plant a mine at the position of the first Click!
       plantMines: function(tileId){
         var random, k;
         var rows = model.config.rows;
         var cols  = model.config.cols;
         var tiles = model.config.tiles;
         for(k = 0; k < model.config.mines; k++){
-          random = Math.floor(Math.random() * (rows*cols));
+          random = Math.floor(Math.random() * ((rows*cols)-1));
           if(random === tileId && tiles[random].hasMine === true){
-            console.log("Either Mine has already been planted here, or it's the id of first clicked tile");
+            console.log("Either the mine has already been planted here, or it's the id of first clicked tile");
             k--;
           }
           else{
@@ -192,6 +214,12 @@
         }
       },
 
+      hasClickedMine: function(tileId){
+        if(tiles[tileId].hasMine === true && tiles[tileId].isFlagged === false){
+          console.log("You clicked on mine, dude!");
+          return true;
+        }
+      }
     };
 
     return{
