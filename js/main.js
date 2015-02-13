@@ -50,7 +50,7 @@
 
       // handles the actual logic of Game Menu hide/show mechanism
       menuToggle: function(){
-        components.menu.style.display = components.menu.style.display === "inline-block" ? "none" : "inline-block";
+        components.menu.classList.toggle("hidden");
       },
 
       generateBoard: function(){
@@ -203,12 +203,13 @@
         var tiles = model.config.tiles;
         for(k = 0; k < model.config.mines; k++){
           random = Math.floor(Math.random() * ((rows*cols)-1));
-          if(random === tileId && tiles[random].hasMine === true){
+          if(random === tileId || tiles[random].hasMine === true){
             console.log("Either the mine has already been planted here, or it's the id of first clicked tile");
             k--;
           }
           else{
             tiles[random].hasMine = true;
+            console.log(random);
           }
         }
         console.log("Alert! Mines have been planted, play carefully now.");

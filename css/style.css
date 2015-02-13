@@ -27,6 +27,10 @@ a {
 .options{
     border: 1px solid #e9e9e9;
     padding: 10px;
+    width: 55%;
+    margin: 0 auto;
+}
+.hidden{
     display: none;
 }
 .menu-table{
