@@ -1,3 +1,10 @@
+/*
+ --------------------------------------------------------------------
+          MINESWEEPER IN PURE JAVASCRIPT : Akash Bhardwaj :)
+ --------------------------------------------------------------------
+*/
+//  -------------------- LOGIC STARTS HERE --------------------
+
 (function(){
   var Game = (function(){
     // holds the data of the application.
@@ -22,6 +29,7 @@
 
     // for ease of access!
     var components = {
+      isFirstTile: true,
       isGameOver: false,
       isTimeOut: false,
       clock: document.getElementById('js-clock'),
@@ -98,19 +106,89 @@
           controller.selectDifficulty(); // On newGame - Select difficulty level and generate the game board.
           views.generateBoard(); // generates board with the chosen difficulty.
           views.menuToggle(); // hide Menu after the new Game has been initialized.
-          controller.tileProp();
+          controller.tileProp(); // sets properties to the tiles of newly generated board.
         });
       },
 
       // adds MODEL.TILE's properties(isOpened, hasMine, etc) to individual tile.
       tileProp: function(){
-        model.config.tiles.length = 0; // ensures that tiles are pushed in an empty array on every refill.
+        model.config.tiles.length = 0; // ensures that tiles are pushed to an empty array on every refill.
         var tds = document.getElementsByClassName('tile');
         for(var i = 0; i < tds.length; i++){
-          var eachTile = Object.create(model.tile);
+          var eachTile = Object.create(model.tile); // model.tile is now a prototype of eachTile. Crockford \m/
           eachTile.td = tds[i]; // associates tile with properties!
           model.config.tiles.push(eachTile); // Tiles array contains all the tiles with properties.
           console.log(model.config.tiles[i]);
+        }
+      },
+
+      // handles all the interaction with the tiles
+      handleMouseEvents: function(){
+        // disables Right Click (Context Menu) on the board; so that It should do the Flagging on right click.
+        components.board.addEventListener('contextmenu', function(e){
+          e.prevantDefault();
+        });
+        // finds target element through Event Delegation, i.e finds the clicked tile.
+        component.board.addEventListener('mouseup', function(e){
+          if(e.target && e.target.nodeName === 'TD'){
+            var tileId = parseInt(e.target.id, 10);
+            var tile = document.getElement(tileId);
+            // if it's right Click --- DO THE FLAGGING!
+            if(e.button === 2){
+              console.log("Hello, Right Click");
+              if(model.config.tiles[tileId].isOpened === false){
+                views.doFlagging(tile);
+              }
+            }
+            else{
+              controller.playGame(tileId);
+            }
+          }
+        });
+      },
+
+      playGame: function(){
+        // if it's the first click of the game, initialize it - start timer, generate mines, and calculate values!
+        if(components.isFirstTile === true){
+          controller.timer();
+          controller.plantMines(tileId);
+          components.isFirstTile = false;
+        }
+        else if(controller.hasClickedMine()){
+
+        }
+      },
+
+      timer: function(){
+        var counter = 0;
+        time = setInterval(function(){
+          if(counter < 999){
+            counter++;
+            components.clock.innerHTML = counter;
+          }
+          else {
+            clearInterval(time);
+            views.setSmiley("sad");
+            components.isTimeOut = true;
+            components.isGameOver = true;
+          }
+        }, 1000);
+      },
+      // donot plant a mine at the position of the first Click!
+      plantMines: function(tileId){
+        var random, k;
+        var rows = model.config.rows;
+        var cols  = model.config.cols;
+        var tiles = model.config.tiles;
+        for(k = 0; k < model.config.mines; k++){
+          random = Math.floor(Math.random() * (rows*cols));
+          if(random === tileId && tiles[random].hasMine === true){
+            console.log("Either Mine has already been planted here, or it's the id of first clicked tile");
+            k--;
+          }
+          else{
+            tiles[random].hasMine = true;
+          }
         }
       },
 
