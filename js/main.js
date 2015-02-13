@@ -136,7 +136,7 @@
       handleMouseEvents: function(){
         // disables Right Click (Context Menu) on the board so that the Flagging should work on right click.
         components.board.addEventListener('contextmenu', function(e){
-          e.prevantDefault();
+          e.preventDefault();
         });
 
         // finds target element through Event Delegation, i.e finds the clicked tile.
@@ -149,7 +149,7 @@
             if(e.button === 2){
               console.log("Hello, Right Click");
               if(model.config.tiles[tileId].isOpened === false){
-                views.doFlagging(tile);
+                controller.doFlagging(tileId);
               }
             }
             else{
@@ -174,7 +174,6 @@
           for(var i = 0; i < model.config.tiles.length; i++){
             if(model.config.tiles[i].hasMine === true & model.config.tiles[i].isFlagged === false){
               model.config.tiles[i].td.classList.add("mines");
-              // model.config.tiles[i].classList.add("mines");
             }
           }
         }
@@ -212,12 +211,33 @@
             tiles[random].hasMine = true;
           }
         }
+        console.log("Alert! Mines have been planted, play carefully now.");
       },
 
       hasClickedMine: function(tileId){
         if(model.config.tiles[tileId].hasMine === true && model.config.tiles[tileId].isFlagged === false){
           console.log("You clicked on mine, dude!");
           return true;
+        }
+      },
+
+      doFlagging: function(tileId){
+        var minesElement = components.noOfMines;
+        var mineValue = parseInt(minesElement.innerHTML, 10);
+        var tile = model.config.tiles[tileId];
+        if(tile.isFlagged === false){
+          if(mineValue > 0){
+            tile.td.classList.add("flagged");
+            tile.isFlagged = true;
+            mineValue--;
+            minesElement.innerHTML = mineValue;
+          }
+        }
+        else if(mineValue < model.config.mines){
+          tile.isFlagged = false;
+          tile.td.classList.remove("flagged");
+          mineValue++;
+          minesElement.innerHTML = mineValue;
         }
       }
     };
