@@ -1,6 +1,5 @@
 (function(){
   var Game = (function(){
-
     // holds the data of the application.
     var model = {
       config: {
@@ -16,12 +15,12 @@
       },
       tile: {
         isFlagged: false,
-        isVisited: false,
+        isOpened: false,
         hasMine: false
       }
     };
 
-    // for ease of reference!
+    // for ease of access!
     var components = {
       isGameOver: false,
       isTimeOut: false,
@@ -40,8 +39,32 @@
       }
     };
 
-    // User Interfaces
+    // User Interface
     var views = {
+      // handles the actual logic of Game Menu hide/show mechanism
+      menuToggle: function(){
+        components.menu.style.display = components.menu.style.display === "inline-block" ? "none" : "inline-block";
+      },
+
+      generateBoard: function(){
+        var rows = model.config.rows;
+        var cols = model.config.cols;
+        var mines = model.config.mines;
+        var html= "",td, id =0;
+
+        for(var i=0; i<rows; i++){
+          html += '<tr>';
+          for(var j=0; j<cols; j++){
+            td = '<td class="tile" id="{id}"></td>';
+            html += td.replace("{id}", id);
+            id++;
+          }
+          html += '</tr>';
+        }
+        components.board.innerHTML = html;
+        components.noOfMines.innerHTML = mines;
+      },
+
 
     };
 
@@ -49,7 +72,7 @@
     var controller = {
       //  handles hide/show Menu EVENT!
       handleMenuToggle: function(){
-        model.elements.gameOptions.addEventListener('click', function(){
+        components.gameOptions.addEventListener('click', function(){
           views.menuToggle();
         });
       },
@@ -75,16 +98,19 @@
           controller.selectDifficulty(); // On newGame - Select difficulty level and generate the game board.
           views.generateBoard(); // generates board with the chosen difficulty.
           views.menuToggle(); // hide Menu after the new Game has been initialized.
+          controller.tileProp();
         });
       },
 
       // adds MODEL.TILE's properties(isOpened, hasMine, etc) to individual tile.
       tileProp: function(){
-        var tds = document.getElementsByTagName('td');
+        model.config.tiles.length = 0; // ensures that tiles are pushed in an empty array on every refill.
+        var tds = document.getElementsByClassName('tile');
         for(var i = 0; i < tds.length; i++){
           var eachTile = Object.create(model.tile);
           eachTile.td = tds[i]; // associates tile with properties!
-          tiles.push(eachTile); // Tiles array contains all the tiles with properties.
+          model.config.tiles.push(eachTile); // Tiles array contains all the tiles with properties.
+          console.log(model.config.tiles[i]);
         }
       },
 
@@ -92,8 +118,12 @@
 
     return{
       init: function(){
+        views.generateBoard();
+        controller.handleMenuToggle();
+        controller.newGameInit();
         controller.tileProp();
       }
     };
   })();
+  Game.init();
 }());
