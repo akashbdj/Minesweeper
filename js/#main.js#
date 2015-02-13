@@ -174,7 +174,6 @@
           for(var i = 0; i < model.config.tiles.length; i++){
             if(model.config.tiles[i].hasMine === true & model.config.tiles[i].isFlagged === false){
               model.config.tiles[i].td.classList.add("mines");
-              // model.config.tiles[i].classList.add("mines");
             }
           }
         }
