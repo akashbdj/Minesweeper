@@ -21,7 +21,7 @@
       images: {
         sad: "images/sad.png",
         smile: "images/smile.png",
-        cool: "images/cool.png",
+        cool: "images/cool.png"
       }
     };
 
@@ -41,7 +41,8 @@
       tile: { // properties of each tile
         isFlagged: false,
         isOpened: false,
-        hasMine: false
+        hasMine: false,
+        count: 0
       }
     };
 
@@ -164,6 +165,7 @@
         if(components.isFirstTile === true){
           controller.timer();
           controller.plantMines(tileId);
+          controller.calculateValuesAroundMines();
           components.isFirstTile = false;
         }
         else if(controller.hasClickedMine(tileId)){
@@ -209,7 +211,6 @@
           }
           else{
             tiles[random].hasMine = true;
-            console.log(random);
           }
         }
         console.log("Alert! Mines have been planted, play carefully now.");
@@ -239,6 +240,62 @@
           tile.td.classList.remove("flagged");
           mineValue++;
           minesElement.innerHTML = mineValue;
+        }
+      },
+
+      calculateValuesAroundMines: function(){
+        var tiles = model.config.tiles;
+        var cols = model.config.cols;
+        var i, mine, top, bottom;
+        for(i = 0; i < tiles.length; i++){
+          if(tiles[i].hasMine === true){
+
+            // increment left tile count by 1 if it's not a mine
+            if(tiles[i-1].td !== null && tiles[i-1].hasMine === false){
+              tiles[i-1].count += 1;
+              console.log(tiles[i-1].count);
+            }
+            // increment right tile count by 1 if it's not a mine
+            if(tiles[i+1].td !== null && tiles[i+1].hasMine === false){
+              tiles[i+1].count += 1;
+              console.log(tiles[i+1].count);
+            }
+
+            // increment count of tile top-left, top, top-right by 1
+            if(tiles[i].td.parentNode.previousElementSibling !== null){
+              top = i - cols;
+              // increment top tile count by 1
+              if(tiles[top].hasMine === false){
+                tiles[top].count += 1;
+              }
+              //increment top-left tile count by 1
+              if(tiles[top-1].td !== null && tiles[top-1].hasMine === false){
+                tiles[top-1].count += 1;
+              }
+              // increment top-right tile count by 1
+              if(tiles[top+1].td !== null && tiles[top+1].hasMine === false){
+                tiles[top+1].count += 1;
+              }
+            }
+
+            // increment bottom, bottom-left and bottom-right tiles count
+            if(tiles[i].td.parentNode.nextElementSibling !== null){
+              bottom = i + cols;
+
+              // increment bottom tile count by 1
+              if(tiles[bottom].hasMine === false){
+                tiles[bottom].count += 1;
+              }
+              //increment bottom-left tile count by 1
+              if(tiles[bottom-1].td !== null && tiles[bottom-1].hasMine === false){
+                tiles[bottom-1].count += 1;
+              }
+              // increment bottom-right tile count by 1
+              if(tiles[bottom+1].td !== null && tiles[bottom+1].hasMine === false){
+                tiles[bottom+1].count += 1;
+              }
+            }
+          }
         }
       }
     };
