@@ -211,6 +211,7 @@
           }
           else{
             tiles[random].hasMine = true;
+            console.log(random);
           }
         }
         console.log("Alert! Mines have been planted, play carefully now.");
@@ -251,12 +252,12 @@
           if(tiles[i].hasMine === true){
 
             // increment left tile count by 1 if it's not a mine
-            if(tiles[i-1].td !== null && tiles[i-1].hasMine === false){
+            if(tiles[i-1] && tiles[i-1].td !== null && tiles[i-1].hasMine === false){
               tiles[i-1].count += 1;
               console.log(tiles[i-1].count);
             }
             // increment right tile count by 1 if it's not a mine
-            if(tiles[i+1].td !== null && tiles[i+1].hasMine === false){
+            if(tiles[i+1] && tiles[i+1].td !== null && tiles[i+1].hasMine === false){
               tiles[i+1].count += 1;
               console.log(tiles[i+1].count);
             }
@@ -269,11 +270,11 @@
                 tiles[top].count += 1;
               }
               //increment top-left tile count by 1
-              if(tiles[top-1].td !== null && tiles[top-1].hasMine === false){
+              if(tiles[top-1] && tiles[top-1].td !== null && tiles[top-1].hasMine === false){
                 tiles[top-1].count += 1;
               }
               // increment top-right tile count by 1
-              if(tiles[top+1].td !== null && tiles[top+1].hasMine === false){
+              if(tiles[top+1] && tiles[top+1].td !== null && tiles[top+1].hasMine === false){
                 tiles[top+1].count += 1;
               }
             }
@@ -287,11 +288,11 @@
                 tiles[bottom].count += 1;
               }
               //increment bottom-left tile count by 1
-              if(tiles[bottom-1].td !== null && tiles[bottom-1].hasMine === false){
+              if(tiles[bottom-1] && tiles[bottom-1].td !== null && tiles[bottom-1].hasMine === false){
                 tiles[bottom-1].count += 1;
               }
               // increment bottom-right tile count by 1
-              if(tiles[bottom+1].td !== null && tiles[bottom+1].hasMine === false){
+              if(tiles[bottom+1] && tiles[bottom+1].td !== null && tiles[bottom+1].hasMine === false){
                 tiles[bottom+1].count += 1;
               }
             }
