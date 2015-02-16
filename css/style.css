@@ -88,7 +88,12 @@ a {
 }
 .opened-tile{
     background: #c0c7cd;
-    border: 2px solid #616d7b;
+    /*border: 2px solid #616d7b;*/
+    border-top: 2px solid #616d7b;
+    border-left: 2px solid #616d7b;
+    border-right: 0px;
+    border-bottom: 0px;
+    padding: 2px;
 }
 .mines {
     background: red url('../images/mine.png') center center;

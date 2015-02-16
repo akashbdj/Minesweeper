@@ -309,6 +309,7 @@
         return false;
       },
 
+      // FLOOD FILL ALGORITHM --- Recursion!
       // reveal tiles till you find the boundary of the numbers
       revealTiles: function(tileId){
         var tiles = model.config.tiles;
