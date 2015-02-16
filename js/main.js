@@ -179,6 +179,11 @@
             }
           }
         }
+        else if(controller.hasWon()){
+          console.log("Yesss! I'mma cool dude!");
+        }
+
+        controller.revealTiles(tileId);
       },
 
       timer: function(){
@@ -296,6 +301,75 @@
                 tiles[bottom+1].count += 1;
               }
             }
+          }
+        }
+      },
+
+      hasWon: function(){
+        return false;
+      },
+
+      // reveal tiles till you find the boundary of the numbers
+      revealTiles: function(tileId){
+        var tiles = model.config.tiles;
+        var tile = tiles[tileId];
+        var cols = model.config.cols;
+        if(tile.isOpened === false && tile.hasMine === false){
+          tile.isOpened = true;
+          tile.td.classList.add("opened-tile");
+          var count = tile.count;
+          if(count === 0){
+
+            // since the clicked tile has zero count,
+            // let's check all its surrounding tiles
+            // and reveal them if they have zero counts too, or
+            // reveal RECURSIVELY till you find the boundary of the numbers i.e greater than 0
+
+            // let's check for LEFT of CLICKED TILE
+            if(tiles[tileId-1] && tiles[tileId-1].hasMine === false){
+              controller.revealTiles(tileId-1);
+            }
+            // let's check for RIGHT of CLICKED TILE
+            if(tiles[tileId+1] && tiles[tileId+1].hasMine === false){
+              controller.revealTiles(tileId+1);
+            }
+            // let's check for TOP, TOP-LEFT, TOP-RIGHT
+            if(tiles[tileId].td.parentNode.previousElementSibling !== null){
+              var top = tileId - cols;
+
+              // TOP
+              if(tiles[top].hasMine === false){
+                controller.revealTiles(top);
+              }
+              // TOP-LEFT
+              if(tiles[top-1] && tiles[top-1].hasMine === false){
+                controller.revealTiles(top-1);
+              }
+              // TOP-RIGHT
+              if(tiles[top+1] && tiles[top+1].hasMine === false){
+                controller.revealTiles(top+1);
+              }
+            }
+            // Let's check for BOTTOM, BOTTOM-LEFT, BOTTOM-RIGHT
+            if(tiles[tileId].td.parentNode.nextElementSibling !== null){
+              var bottom = tileId + cols;
+
+              // BOTTOM
+              if(tiles[bottom].hasMine === false){
+                controller.revealTiles(bottom);
+              }
+              // BOTTOM-LEFT
+              if(tiles[bottom-1] && tiles[bottom-1].hasMine === false){
+                controller.revealTiles(bottom-1);
+              }
+              // BOTTOM-RIGHT
+              if(tiles[bottom+1] && tiles[bottom+1].hasMine === false){
+                controller.revealTiles(bottom+1);
+              }
+            }
+          }
+          else {
+            tile.td.innerHTML = count;
           }
         }
       }
